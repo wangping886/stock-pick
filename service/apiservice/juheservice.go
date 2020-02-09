@@ -2,7 +2,6 @@ package apiservice
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"github.com/wangping886/stock-pick/httpclient"
 	"github.com/wangping886/stock-pick/model"
@@ -49,8 +48,6 @@ type JuheStock struct {
 	Turnoverratio float64 //还手率
 }
 
-var Suspension = map[string]bool{"2020-01-01": true}
-
 func (j *JuheService) genHttpUrl() string {
 	return ""
 }
@@ -64,9 +61,7 @@ func (j *JuheService) GetStockInfo() ([]*model.StockTrend, error) {
 		err       error
 		resString string
 	)
-	if time.Now().Weekday() > time.Friday || Suspension[time.Now().Format("2006-01-02")] {
-		return st, errors.New("非交易时间")
-	}
+
 	// v.Encode() == "name=Ava&friend=Jess&friend=Sarah&friend=Zoe"
 	v := url.Values{}
 	v.Set("key", "e09b5e826762843f25cb31bb13f7bdcf")

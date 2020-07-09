@@ -18,6 +18,7 @@ type JuheService struct {
 	Page    string
 	Stock   string // a 股 b 股
 	Type    string // 每页多少个
+	Code    int
 }
 
 type JuheResponse struct {
@@ -30,6 +31,24 @@ type JuheResponse struct {
 	}
 }
 
+type JuheDapanResponse struct {
+	Resultcode string `json:"resultcode"`
+	Reason     string `json:"reason"`
+	Result     []JuheSingleStock
+}
+
+type JuheSingleStock struct {
+	Data struct {
+		Date          string
+		Code          int
+		IncrePer      string
+		Name          string
+		NowPri        string
+		TodayStartPri string
+		YestodEndPri  string
+		TraAmount     string
+	}
+}
 type JuheStock struct {
 	Symbol        string
 	Code          string
@@ -113,4 +132,55 @@ func (j *JuheService) GetStockInfo() ([]*model.StockTrend, error) {
 		st = append(st, data)
 	}
 	return st, nil
+}
+
+func (j *JuheService) GetIndexStockInfo() (model.StockTrend, error) {
+
+	var (
+		jr        JuheDapanResponse
+		st        model.StockTrend
+		err       error
+		resString string
+	)
+
+	v := url.Values{}
+	v.Set("key", "e09b5e826762843f25cb31bb13f7bdcf")
+	if j.Code == 399001 {
+		v.Set("gid", "sz399001")
+	}
+	if j.Code == 399002 {
+		v.Set("gid", "sh000001")
+	}
+	neturl := fmt.Sprintf("%s?%s", j.ApiAddr, v.Encode())
+
+	client := httpclient.DefaultHttpclient()
+	resString, err = client.HttpGet(neturl)
+	if err != nil {
+		return st, nil
+	}
+	err = json.Unmarshal([]byte(resString), &jr)
+	if err != nil {
+		return st, err
+	}
+	dapanData := jr.Result[0].Data
+	open, err := strconv.ParseFloat(dapanData.TodayStartPri, 64)
+	close, err := strconv.ParseFloat(dapanData.NowPri, 64)
+	yesterdayClose, err := strconv.ParseFloat(dapanData.YestodEndPri, 64)
+	openingGrowthRate := math.Round(((open-yesterdayClose)*100/yesterdayClose)*100) / 100
+	change, err := strconv.ParseFloat(dapanData.IncrePer, 64)
+	amount, err := strconv.ParseFloat(dapanData.TraAmount, 64)
+
+	data := model.StockTrend{
+		Name:                  dapanData.Name,
+		Code:                  j.Code,
+		OpeningPrice:          open,
+		OpeningGrowthRate:     openingGrowthRate,
+		CloseingPrice:         close,
+		YesterdayClosingPrice: yesterdayClose,
+		GrowthRate:            change,
+		Volume:                int(amount / 100000000.0),
+		TradingDay:            time.Now().Format("2006-01-02"),
+	}
+	log.Println("stockinfo", data, "err", err)
+	return data, nil
 }

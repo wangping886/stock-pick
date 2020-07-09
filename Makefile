@@ -6,3 +6,5 @@ linux:
 
 ox:
 	go build -o stock-pick_ox  main.go;
+run:
+	./stock-pick_ox

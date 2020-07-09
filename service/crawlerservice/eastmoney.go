@@ -5,6 +5,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/wangping886/stock-pick/httpclient"
 	"github.com/wangping886/stock-pick/model"
+	"strings"
 )
 
 type EastCrawler struct {
@@ -59,7 +60,7 @@ func (e *EastCrawler) ProcessTrendHtml() (data model.StockTrend, err error) {
 func (e *EastCrawler) ProcessNoticeHtml() (err error) {
 
 	httpclient := httpclient.DefaultHttpclient()
-	resp, err := httpclient.Get("http://data.eastmoney.com/notices/getdata.ashx?StockCode=&FirstNodeType=0&CodeType=1&PageIndex=1&PageSize=50&jsObj=ySLiMGsI&SecNodeType=0&Time=&rt=52618026")
+	resp, err := httpclient.Get("http://www.sse.com.cn/disclosure/listedinfo/announcement/")
 	if err != nil {
 		return
 	}
@@ -69,6 +70,9 @@ func (e *EastCrawler) ProcessNoticeHtml() (err error) {
 	if err != nil {
 		return
 	}
-	fmt.Println(doc.Html())
+	html, _ := doc.Html()
+	fmt.Println(strings.Contains(html, "金字火腿"))
+	fmt.Println(html)
+
 	return
 }

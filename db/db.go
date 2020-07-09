@@ -17,7 +17,7 @@ func init() {
 		}
 	}()
 
-	DB, err = sql.Open("mysql", "root:000000.Mysql@tcp(127.0.0.1:3306)/stock_pick?clientFoundRows=false&parseTime=true&loc=Asia%2FShanghai&timeout=10s&collation=utf8mb4_bin&interpolateParams=true")
+	DB, err = sql.Open("mysql", "root:000000.Mysql@tcp(112.126.58.214:3306)/stock_pick?clientFoundRows=false&parseTime=true&loc=Asia%2FShanghai&timeout=10s&collation=utf8mb4_bin&interpolateParams=true")
 	if err != nil {
 		panic(err)
 	}

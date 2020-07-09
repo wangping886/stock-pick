@@ -48,6 +48,28 @@ func CrawlerTrendProcess() error {
 			}
 		}
 	}
+
+	//大盘指数
+	api := apiservice.NewJuheService("e09b5e826762843f25cb31bb13f7bdcf")
+	api.ApiAddr = "http://web.juhe.cn:8080/finance/stock/hs"
+	api.Code = 399001
+	st, err := api.GetIndexStockInfo()
+	if err != nil {
+		log.Println("GetIndexStockInfo error:", err)
+	}
+	err = dao.InsertStockTrade(&st)
+	if err != nil {
+		log.Println("GetIndexStockInfo error:", err)
+	}
+	api.Code = 399002
+	st, err = api.GetIndexStockInfo()
+	if err != nil {
+		log.Println("GetIndexStockInfo error:", err)
+	}
+	err = dao.InsertStockTrade(&st)
+	if err != nil {
+		log.Println("dao.InsertStockTrade error:", err)
+	}
 	log.Println("crawler exec", time.Now().Sub(now).Seconds())
 	return nil
 }

@@ -21,3 +21,15 @@ func CrawlerStockCron() {
 	}
 
 }
+
+func FiterPotentialStock() {
+	if time.Now().Weekday() == time.Saturday || time.Now().Weekday() == time.Sunday || Suspension[time.Now().Format("2006-01-02")] {
+		log.Println("info:", "非交易时间")
+		return
+	}
+	err := logic.FiterPotentialStock()
+	if err != nil {
+		log.Println("logic.FiterPotentialStock error:", err)
+	}
+
+}

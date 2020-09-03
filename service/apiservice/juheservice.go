@@ -54,7 +54,7 @@ type JuheStock struct {
 	Code          string
 	Name          string
 	Trade         string  //最新价
-	Pricechange   string  // 涨跌额
+	Pricechange   float64 // 涨跌额
 	Changepercent string  //涨跌幅
 	Settlement    string  //昨收
 	Open          string  //开盘

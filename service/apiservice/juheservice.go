@@ -54,8 +54,8 @@ type JuheStock struct {
 	Code          string
 	Name          string
 	Trade         string  //最新价
-	Pricechange   float64 // 涨跌额
-	Changepercent float64 //涨跌幅
+	//Pricechange   float64 // 涨跌额
+	Changepercent interface{} //涨跌幅
 	Settlement    string  //昨收
 	Open          string  //开盘
 	High          string  //最高
@@ -105,6 +105,15 @@ func (j *JuheService) GetStockInfo() ([]*model.StockTrend, error) {
 		codeInt, err := strconv.Atoi(r.Code)
 		open, err := strconv.ParseFloat(r.Open, 64)
 		close, err := strconv.ParseFloat(r.Trade, 64)
+		var grothrate float64
+		switch value:=r.Changepercent.(type) {
+		case float64:
+			grothrate=value
+		case string:
+			grothrate, _ = strconv.ParseFloat(value, 64)
+		default:
+			log.Println("uncaught type")
+		}
 		yesterdayClose, err := strconv.ParseFloat(r.Settlement, 64)
 		openingGrowthRate := math.Round(((open-yesterdayClose)*100/yesterdayClose)*100) / 100
 		high, err := strconv.ParseFloat(r.High, 64)
@@ -120,7 +129,7 @@ func (j *JuheService) GetStockInfo() ([]*model.StockTrend, error) {
 			OpeningGrowthRate:     openingGrowthRate,
 			CloseingPrice:         close,
 			YesterdayClosingPrice: yesterdayClose,
-			GrowthRate:            r.Changepercent,
+			GrowthRate:            grothrate,
 			StockAmplitude:        amplitude,
 			Volume:                r.Amount / 10000,
 			TurnoverRate:          math.Round(r.Turnoverratio*100) / 100,

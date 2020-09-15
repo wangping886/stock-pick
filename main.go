@@ -33,7 +33,7 @@ func main() {
 	cron.Start()
 	defer cron.Stop()
 	log.Println("start server: stock-pick")
-	cron.AddFunc("0 55 15 * * *", daemon.CrawlerStockCron)
+	cron.AddFunc("0 45 15 * * *", daemon.CrawlerStockCron)
 	cron.AddFunc("0 08 16 * * *", daemon.FiterPotentialStock)
 
 	<-(chan int)(nil) // TODO: 替换成监听系统信号

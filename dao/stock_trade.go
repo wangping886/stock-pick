@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/wangping886/stock-pick/db"
 	"github.com/wangping886/stock-pick/model"
+	"time"
 )
 
 func InsertStockTrade(data *model.StockTrend) error {
@@ -60,4 +61,26 @@ func SelectStockCodes() ([]int, error) {
 		codes = append(codes, code)
 	}
 	return codes, err
+}
+
+func SelectDaysBeforeStock(code int, days int) ([]model.StockTrend, error) {
+	var sts = make([]model.StockTrend, 0)
+	beforeTime := time.Now().AddDate(0, 0, days).Format("2006-01-02")
+	query := "select id,name,code,growth_rate,market_value from stock_trend where code = ? and trading_day >= ? "
+	rows, err := db.DB.Query(query, code, beforeTime)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		var st model.StockTrend
+		rows.Scan(
+			&st.Id,
+			&st.Name,
+			&st.Code,
+			&st.GrowthRate,
+			&st.MarketValue,
+		)
+		sts = append(sts, st)
+	}
+	return sts, nil
 }

@@ -31,6 +31,7 @@ func FiterPotentialStock() {
 		log.Println("info:", "非交易时间")
 		return
 	}
+
 	err := logic.FiterPotentialStock()
 	if err != nil {
 		log.Println("logic.FiterPotentialStock error:", err)

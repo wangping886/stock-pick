@@ -13,6 +13,7 @@ func FiterPotentialStock() error {
 	}
 
 	for _, code := range codes {
+		//8  6天的数据
 		stocks, err := dao.SelectDaysBeforeStock(code, -7)
 		if err != nil {
 			continue
@@ -22,12 +23,12 @@ func FiterPotentialStock() error {
 		for _, s := range stocks {
 			accumu += s.GrowthRate
 		}
-		if accumu > -10 || stocks[0].MarketValue < 300 {
+		if accumu > -10 || stocks[0].MarketValue < 700 {
 			continue
 		}
 
 		for _, s := range stocks {
-			if s.GrowthRate <= -4 {
+			if s.GrowthRate <= -4.5 {
 				have4 = true
 			}
 		}
@@ -39,6 +40,7 @@ func FiterPotentialStock() error {
 		sp := dao.StockPotential{
 			Type: 1,
 			Code: code,
+			Name: stocks[0].Name,
 		}
 		err = dao.InsertStockPotential(sp)
 		if err != nil {

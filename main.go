@@ -36,7 +36,7 @@ func main() {
 	//抓取每天收盘价
 	cron.AddFunc("0 45 15 * * *", daemon.CrawlerStockCron)
 
-	cron.AddFunc("0 34 18 * * *", daemon.FiterPotentialStock)
+	cron.AddFunc("0 34 15 * * *", daemon.FiterPotentialStock)
 
 	<-(chan int)(nil) // TODO: 替换成监听系统信号
 }

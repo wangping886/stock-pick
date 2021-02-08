@@ -5,6 +5,17 @@ import (
 	"log"
 )
 
+const (
+	//6个交易日
+	daysbefore = -7
+	//累计跌幅
+	totaldrop = -9
+	//市值
+	marketvalue = 400
+	//单日跌幅
+	somedaydrop = -3.5
+)
+
 func FiterPotentialStock() error {
 
 	codes, err := dao.SelectStockCodes()
@@ -14,33 +25,34 @@ func FiterPotentialStock() error {
 
 	for _, code := range codes {
 		//8  6天的数据
-		stocks, err := dao.SelectDaysBeforeStock(code, -7)
+		stocks, err := dao.SelectDaysBeforeStock(code, daysbefore)
 		if err != nil {
 			continue
 		}
 		var accumu float64
-		var have4 bool
+		var somedayBreakDrop bool
 		for _, s := range stocks {
 			accumu += s.GrowthRate
 		}
-		if accumu > -10 || stocks[0].MarketValue < 700 {
+		if accumu > totaldrop || stocks[0].MarketValue < marketvalue {
 			continue
 		}
 
 		for _, s := range stocks {
-			if s.GrowthRate <= -4.5 {
-				have4 = true
+			if s.GrowthRate <= -somedaydrop {
+				somedayBreakDrop = true
 			}
 		}
 
-		if !have4 {
+		if !somedayBreakDrop {
 			continue
 		}
 
 		sp := dao.StockPotential{
-			Type: 1,
-			Code: code,
-			Name: stocks[0].Name,
+			Type:      1,
+			Code:      code,
+			Name:      stocks[0].Name,
+			TotalDrop: accumu,
 		}
 		err = dao.InsertStockPotential(sp)
 		if err != nil {

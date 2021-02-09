@@ -28,7 +28,7 @@ func FiterPotentialStock() error {
 		var accumu float64
 		//8  6天的数据
 		stocks, err := dao.SelectDaysBeforeStock(code, daysbefore)
-		if err != nil {
+		if err != nil || len(stocks) == 0 {
 			continue
 		}
 		var somedayBreakDrop bool

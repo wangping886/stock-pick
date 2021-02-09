@@ -22,14 +22,14 @@ func FiterPotentialStock() error {
 	if err != nil {
 		return err
 	}
-
+	//近期累计跌幅
+	var accumu float64
 	for _, code := range codes {
 		//8  6天的数据
 		stocks, err := dao.SelectDaysBeforeStock(code, daysbefore)
 		if err != nil {
 			continue
 		}
-		var accumu float64
 		var somedayBreakDrop bool
 		for _, s := range stocks {
 			accumu += s.GrowthRate

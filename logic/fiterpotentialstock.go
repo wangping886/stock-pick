@@ -2,7 +2,9 @@ package logic
 
 import (
 	"github.com/wangping886/stock-pick/dao"
+	"github.com/wangping886/stock-pick/model"
 	"log"
+	"time"
 )
 
 const (
@@ -26,8 +28,8 @@ func FiterPotentialStock() error {
 	for _, code := range codes {
 		//近期累计跌幅
 		var accumu float64
-		//8  6天的数据
-		stocks, err := dao.SelectDaysBeforeStock(code, daysbefore)
+		startTime := time.Now().AddDate(0, 0, daysbefore).Format("2006-01-02")
+		stocks, err := dao.SelectDaysBeforeStock(code, startTime)
 		if err != nil || len(stocks) == 0 {
 			continue
 		}
@@ -35,7 +37,7 @@ func FiterPotentialStock() error {
 		for _, s := range stocks {
 			accumu += s.GrowthRate
 		}
-		sp := dao.StockPotential{
+		sp := model.StockPotential{
 			Type:      1,
 			Code:      code,
 			Name:      stocks[0].Name,

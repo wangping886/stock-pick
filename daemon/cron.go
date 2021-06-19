@@ -38,3 +38,11 @@ func FiterPotentialStock() {
 	}
 
 }
+
+func CalculatePeriodRise() {
+	//15天之前的所有
+	err := logic.CalculateRise()
+	if err != nil {
+		log.Println("logic.CalculateRise error:", err)
+	}
+}

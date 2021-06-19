@@ -38,7 +38,7 @@ func main() {
 
 	cron.AddFunc("0 53 15 * * *", daemon.FiterPotentialStock)
 
-	cron.AddFunc("0 55 01 * * *", daemon.CalculatePeriodRise)
+	cron.AddFunc("0 05 02 * * *", daemon.CalculatePeriodRise)
 
 	<-(chan int)(nil) // TODO: 替换成监听系统信号
 }

@@ -15,7 +15,7 @@ func InsertStockPotential(sp model.StockPotential) error {
 func GetStockPotentialList(days int) ([]model.StockPotential, error) {
 	var sps = make([]model.StockPotential, 0)
 	beforeTime := time.Now().AddDate(0, 0, days).Format("2006-01-02")
-	query := "select id,name,code,created_at from stock_potential where  trading_day >= ? order by id asc "
+	query := "select id,name,code,created_at from stock_potential where  created_at>= ? order by id asc "
 	rows, err := db.DB.Query(query, beforeTime)
 	if err != nil {
 		return nil, err

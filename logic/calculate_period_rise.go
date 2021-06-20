@@ -16,7 +16,7 @@ const (
 
 func CalculateRise() (err error) {
 	//
-	potentialList, err := dao.GetStockPotentialList(-300)
+	potentialList, err := dao.GetStockPotentialList(-50)
 	if err != nil {
 		return err
 	}
@@ -24,7 +24,7 @@ func CalculateRise() (err error) {
 	for _, p := range potentialList {
 		var sp model.StockPotential
 		sp.Id = p.Id
-		startTime := p.CreatedAt.Format("2006-01-02")
+		startTime := p.CreatedAt.AddDate(0, 0, 1).Format("2006-01-02")
 		trends, err := dao.SelectDaysBeforeStock(p.Code, startTime)
 		if err != nil {
 			fmt.Println("SelectDaysBeforeStock", err.Error(), p.Code, p.Id)
@@ -37,16 +37,16 @@ func CalculateRise() (err error) {
 				sp.FirstLevel = accu
 			}
 			if i == SecondLevel-1 {
-				sp.FirstLevel = accu
+				sp.SecondLevel = accu
 			}
 			if i == ThirdLevel-1 {
-				sp.FirstLevel = accu
+				sp.ThirdLevel = accu
 			}
 			if i == FourthLevel-1 {
-				sp.FirstLevel = accu
+				sp.FourthLevel = accu
 			}
 			if i == FifthLevel-1 {
-				sp.FirstLevel = accu
+				sp.FifthLevel = accu
 			}
 		}
 		sp.UptonowDrop = accu

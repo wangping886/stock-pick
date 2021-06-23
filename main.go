@@ -34,11 +34,11 @@ func main() {
 	defer cron.Stop()
 	log.Println("start server: stock-pick")
 	//抓取每天收盘价
-	cron.AddFunc("0 57 15 * * *", daemon.CrawlerStockCron)
+	cron.AddFunc("0 05 15 * * *", daemon.CrawlerStockCron)
 	//筛选符合规则的潜力股
-	cron.AddFunc("0 59 15 * * *", daemon.FiterPotentialStock)
+	cron.AddFunc("0 10 15 * * *", daemon.FiterPotentialStock)
 	//计算潜力股的累计涨幅
-	cron.AddFunc("0 02 16 * * *", daemon.CalculatePeriodRise)
+	cron.AddFunc("0 15 15 * * *", daemon.CalculatePeriodRise)
 
 	<-(chan int)(nil) // TODO: 替换成监听系统信号
 }

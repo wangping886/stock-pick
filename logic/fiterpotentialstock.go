@@ -11,11 +11,11 @@ const (
 	//6个交易日
 	daysbefore = -7
 	//累计跌幅
-	totaldrop = -9
+	totaldrop = -8.5
 	//市值
-	marketvalue = 500
+	marketvalue = 300
 	//单日跌幅
-	somedaydrop = -3.2
+	somedaydrop = -2.9
 )
 
 func FiterPotentialStock() error {
